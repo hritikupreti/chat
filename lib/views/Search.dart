@@ -1,4 +1,5 @@
 import 'package:chat_app/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -8,6 +9,28 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController search = TextEditingController();
+  late QuerySnapshot searchSnapshot;
+  searchedAccount() {
+    usersearch(search.text).then((val) {
+      setState(() {
+        searchSnapshot = val;
+      });
+    });
+  }
+
+  Widget searchList() {
+    return searchSnapshot != null
+        ? ListView.builder(
+            shrinkWrap: true,
+            itemCount: searchSnapshot.docs.length,
+            itemBuilder: (context, index) {
+              return SerchTile(
+                  userName: searchSnapshot.docs[index].get("Name"),
+                  email: searchSnapshot.docs[index].get("email"));
+            })
+        : Container();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +73,7 @@ class _SearchPageState extends State<SearchPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: GestureDetector(
                       onTap: () {
-                        usersearch(search.text);
+                        searchedAccount();
                       },
                       child: Container(
                         height: 40,
@@ -72,11 +95,50 @@ class _SearchPageState extends State<SearchPage> {
             ),
             Expanded(
               child: Container(
-                color: Colors.purple[100],
+                color: Colors.purple[50],
               ),
             ),
+            searchList(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class SerchTile extends StatelessWidget {
+  final userName;
+  final email;
+  SerchTile({this.email, this.userName});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.white,
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 10,
+            child: Icon(Icons.person),
+          ),
+          Column(
+            children: [
+              Text(userName),
+              Text(email),
+            ],
+          ),
+          Spacer(),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: Colors.purple[200],
+            ),
+            child: Text("Message"),
+          )
+        ],
       ),
     );
   }

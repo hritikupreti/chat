@@ -123,7 +123,7 @@ class _SignUpState extends State<SignUp> {
                                 if (formKey.currentState!.validate()) {
                                   Map<String, String> userMap = {
                                     "Name": username.text,
-                                    //"email": email.toString()
+                                    "email": email.text
                                   };
                                   setState(() {
                                     isLoading = true;

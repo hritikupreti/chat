@@ -33,8 +33,7 @@ dependencies:
   custom_navigation_bar: ^0.8.1
   persistent_bottom_nav_bar: ^4.0.2
   firebase_core: ^1.1.0
-  provider: ^5.0.0
-  path_provider: ^1.6.16
+  firebase_core_platform_interface: ^4.0.1
 
 
 
